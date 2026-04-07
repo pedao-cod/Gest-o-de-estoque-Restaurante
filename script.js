@@ -401,7 +401,9 @@ function generatePDF() {
               <tr>
                 <td style="border: 1px solid #ccc; padding: 8px;">${escHtml(item.name)}</td>
                 <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${escHtml(item.unit)}</td>
-                <td style="border: 1px solid #ccc; padding: 8px; text-align: center; font-weight: bold;">${state.quantities[item.id]}</td>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: center; font-weight: bold;">
+                  ${formatUnit(state.quantities[item.id], item.unit)}
+                </td>
               </tr>
             `,
               )
