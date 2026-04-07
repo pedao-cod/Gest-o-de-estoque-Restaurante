@@ -331,17 +331,17 @@ function deleteItem(id) {
 //  CLEAR ALL
 // ─────────────────────────────────────────────────────
 function clearAll() {
+
   if (!confirm("Zerar todas as quantidades? Isso não remove os itens.")) return;
-  
+
   state.quantities = {};
-  saveData();
-  render();
-  showToast("Quantidades zeradas!", "success");
-}
 
   saveData();
-  render(); // Atualiza a tela
-  showToast("Quantidades restauradas para o padrão.", "success");
+
+  render();
+
+  showToast("Quantidades zeradas!", "");
+
 }
 // ─────────────────────────────────────────────────────
 //  GENERATE PDF (print)
