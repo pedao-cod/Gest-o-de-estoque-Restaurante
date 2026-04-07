@@ -330,20 +330,14 @@ function deleteItem(id) {
 // ─────────────────────────────────────────────────────
 //  CLEAR ALL
 // ─────────────────────────────────────────────────────
-function handleClearAll() {
-  if (!confirm("Deseja voltar todas as quantidades para o padrão inicial?")) return;
-
-  // Em vez de colocar 0 em tudo, vamos ler o DEFAULT_DATA de novo
+function clearAll() {
+  if (!confirm("Zerar todas as quantidades? Isso não remove os itens.")) return;
+  
   state.quantities = {};
-  Object.keys(DEFAULT_DATA).forEach(tab => {
-    DEFAULT_DATA[tab].forEach(item => {
-      if (item.quantity) {
-        state.quantities[item.id] = parseInt(item.quantity);
-      } else {
-        state.quantities[item.id] = 0;
-      }
-    });
-  });
+  saveData();
+  render();
+  showToast("Quantidades zeradas!", "success");
+}
 
   saveData();
   render(); // Atualiza a tela
