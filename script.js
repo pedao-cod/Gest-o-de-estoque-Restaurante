@@ -122,19 +122,19 @@ let state = {
 };
 
 function loadState() {
-  // Alterado para "v2" para forçar o navegador a ignorar a memória antiga
-  const saved = localStorage.getItem("hiroki_data_v2");
+  // Mudamos para v5 para forçar a limpeza da memória corrompida
+  const saved = localStorage.getItem("hiroki_data_v5");
   if (saved) {
     state.data = JSON.parse(saved);
   } else {
     state.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
   }
 
-  const savedQty = localStorage.getItem("hiroki_qty_v2");
+  const savedQty = localStorage.getItem("hiroki_qty_v5");
   if (savedQty) {
     state.quantities = JSON.parse(savedQty);
   } else {
-    // Carrega as quantidades padrão na primeira vez que o sistema for aberto
+    // Carrega as quantidades padrão do DEFAULT_DATA na primeira vez
     Object.keys(state.data).forEach((tab) => {
       state.data[tab].forEach((item) => {
         if (item.quantity && item.quantity !== "") {
@@ -144,15 +144,15 @@ function loadState() {
     });
   }
 
-  const savedId = localStorage.getItem("hiroki_nextid_v2");
+  const savedId = localStorage.getItem("hiroki_nextid_v5");
   if (savedId) state.nextId = parseInt(savedId);
 }
 
 function saveData() {
-  // Alterado para "v2" também
-  localStorage.setItem("hiroki_data_v2", JSON.stringify(state.data));
-  localStorage.setItem("hiroki_qty_v2", JSON.stringify(state.quantities));
-  localStorage.setItem("hiroki_nextid_v2", String(state.nextId));
+  // Salvando na nova versão v5
+  localStorage.setItem("hiroki_data_v5", JSON.stringify(state.data));
+  localStorage.setItem("hiroki_qty_v5", JSON.stringify(state.quantities));
+  localStorage.setItem("hiroki_nextid_v5", String(state.nextId));
 }
 
 // ─────────────────────────────────────────────────────
@@ -328,20 +328,26 @@ function deleteItem(id) {
 }
 
 // ─────────────────────────────────────────────────────
-//  CLEAR ALL
+//  CLEAR ALL (Agora restaura os padrões)
 // ─────────────────────────────────────────────────────
 function clearAll() {
+  if (!confirm("Deseja restaurar as quantidades para o padrão inicial do sistema?")) return;
 
-  if (!confirm("Zerar todas as quantidades? Isso não remove os itens.")) return;
-
+  // Limpa as quantidades atuais
   state.quantities = {};
 
+  // Puxa novamente as quantidades do DEFAULT_DATA
+  Object.keys(DEFAULT_DATA).forEach((tab) => {
+    DEFAULT_DATA[tab].forEach((item) => {
+      if (item.quantity && item.quantity !== "") {
+        state.quantities[item.id] = parseInt(item.quantity);
+      }
+    });
+  });
+
   saveData();
-
   render();
-
-  showToast("Quantidades zeradas!", "");
-
+  showToast("Quantidades restauradas com sucesso!", "success");
 }
 // ─────────────────────────────────────────────────────
 //  GENERATE PDF (print)
