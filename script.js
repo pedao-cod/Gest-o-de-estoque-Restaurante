@@ -429,6 +429,39 @@ function generatePDF() {
     </div>
   `;
 
+  // ─────────────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────────────
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+// NOVA FUNÇÃO: Formata a quantidade com a unidade correta (Singular/Plural)
+function formatUnit(qty, unit) {
+  if (qty <= 1) return `${qty} ${unit}`;
+
+  // Dicionário de plurais para palavras que não são abreviações
+  const plurals = {
+    "maço": "maços",
+    "fardo": "fardos",
+    "rolo": "rolos",
+    "placa": "placas",
+    "garrafa": "garrafas",
+    "galão": "galões",
+    "dúzia": "dúzias",
+    "pack": "packs",
+    "und": "unds"
+  };
+
+  // Se for abreviação (kg, L, g, pct, un, cx) continua igual. Se for palavra, puxa o plural.
+  const displayUnit = plurals[unit] || unit;
+  return `${qty} ${displayUnit}`;
+}
+
   // Dispara a impressão
   window.print();
 }
